@@ -43,11 +43,11 @@ typedef struct  infos {
 }               infos;
 
 void    charger_objet(char *nom) {
-    FILE        *fobject = NULL;
-    infos       infos;
-    float       **tabValues;
-    int         nbLines;
-    int         posElem;
+    FILE    *fobject = NULL;
+    infos   infos;
+    double  **tabValues;
+    int     nbLines;
+    int     posElem;
 
     char    *line = NULL;
     size_t	len = 0;
@@ -80,14 +80,15 @@ void    charger_objet(char *nom) {
             infos.ny = strtol(splitLine[1], NULL, 10);
             infos.angle = strtod(splitLine[2], NULL);
 
-            if (!(tabValues = malloc(sizeof(float *) * ((infos.nx * infos.ny)) + 1))) {
+            if (!(tabValues = malloc(sizeof(double *) * ((infos.nx * infos.ny) + 1)))) {
                 fprintf(stderr, "Erreur, malloc échoué.\n");
                 exit(EXIT_FAILURE);
             }
+            tabValues[((infos.nx * infos.ny))] = NULL;
 
             posElem = 0;
-            while (posElem < ((infos.nx * infos.ny)) + 1) {
-                if (!(tabValues[posElem++] = malloc(sizeof(float) * 5))) {
+            while (((infos.nx * infos.ny) - 1) >= posElem) {
+                if (!(tabValues[posElem++] = malloc(sizeof(double) * 5))) {
                     fprintf(stderr, "Erreur, malloc échoué.\n");
                     exit(EXIT_FAILURE);
                 }
@@ -95,17 +96,18 @@ void    charger_objet(char *nom) {
 
         } else {
             posElem = 0;
-            while (splitLine[posElem]) {
-                tabValues[nbLines - 1][posElem] = atof(splitLine[posElem]);
-                printf("%f\n", tabValues[nbLines - 1][posElem]);
+            while (tabValues[nbLines - 1] && splitLine[posElem]) {
+                tabValues[nbLines - 1][posElem] = strtod(splitLine[posElem], NULL);
+                //printf("%f\n", tabValues[nbLines - 1][posElem]); TODO
                 posElem++;
             }
         }
 
-        printf("\n");
+        //printf("\n"); TODO
         nbLines += 1;
     }
 
+    fclose(fobject);
 } /* charger_objet */
 
 void afficher_profil(float couleur[3])
