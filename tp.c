@@ -33,21 +33,15 @@
 #include <math.h>
 #include <string.h>
 
-#include "maillage.h"
 #include "calcul.h"
-
-typedef struct  infos {
-    int         nx;
-    int         ny;
-    double      angle;
-}               infos;
+#include "maillage.h"
 
 void    charger_objet(char *nom) {
     FILE    *fobject = NULL;
-    infos   infos;
-    double  **tabValues;
     int     nbLines;
-    int     posElem;
+    int     nbElem;
+    int     nxInc;
+    int     nyInc;
 
     char    *line = NULL;
     size_t	len = 0;
@@ -60,15 +54,20 @@ void    charger_objet(char *nom) {
     }
 
     nbLines = 0;
+    nxInc = 0;
+    nyInc = 0;
+
+    xmin, xmax, ymin, ymax = 0;
+    umin, umax, vmin, vmax = 0;
     while ((read = getline(&line, &len, fobject)) != -1) {
         line = strtok(line, "\t\r\n ");
         char *splitLine[5] = {NULL};
 
-        posElem = 0;
+        nbElem = 0;
         while (line) {
-            splitLine[posElem++] = line;
+            splitLine[nbElem++] = line;
 
-            if (posElem > 4) {
+            if (nbElem > 4) {
                 fprintf(stderr, "Erreur, le fichier comporte plus d'argumets que demandé.\n");
                 exit(EXIT_FAILURE);
             }
@@ -76,36 +75,41 @@ void    charger_objet(char *nom) {
         }
 
         if (nbLines == 0) {
-            infos.nx = strtol(splitLine[0], NULL, 10);
-            infos.ny = strtol(splitLine[1], NULL, 10);
-            infos.angle = strtod(splitLine[2], NULL);
-
-            if (!(tabValues = malloc(sizeof(double *) * ((infos.nx * infos.ny) + 1)))) {
-                fprintf(stderr, "Erreur, malloc échoué.\n");
-                exit(EXIT_FAILURE);
-            }
-            tabValues[((infos.nx * infos.ny))] = NULL;
-
-            posElem = 0;
-            while (((infos.nx * infos.ny) - 1) >= posElem) {
-                if (!(tabValues[posElem++] = malloc(sizeof(double) * 5))) {
-                    fprintf(stderr, "Erreur, malloc échoué.\n");
-                    exit(EXIT_FAILURE);
-                }
-            }
+            nx = strtol(splitLine[0], NULL, 10);
+            ny = strtol(splitLine[1], NULL, 10);
+            Angle = strtod(splitLine[2], NULL);
 
         } else {
-            posElem = 0;
-            while (tabValues[nbLines - 1] && splitLine[posElem]) {
-                tabValues[nbLines - 1][posElem] = strtod(splitLine[posElem], NULL);
-                //printf("%f\n", tabValues[nbLines - 1][posElem]); TODO
-                posElem++;
+            x[nxInc][nyInc] = strtod(splitLine[0], NULL);
+            y[nxInc][nyInc] = strtod(splitLine[1], NULL);
+            u[nxInc][nyInc] = strtod(splitLine[2], NULL);
+            v[nxInc][nyInc] = strtod(splitLine[3], NULL);
+
+            xmax = MAX(x[nxInc][nyInc], xmax);
+            ymax = MAX(y[nxInc][nyInc], ymax);
+            umax = MAX(u[nxInc][nyInc], umax);
+            vmax = MAX(v[nxInc][nyInc], vmax);
+
+            xmin = MIN(x[nxInc][nyInc], xmin);
+            ymin = MIN(y[nxInc][nyInc], ymin);
+            umin = MIN(u[nxInc][nyInc], umin);
+            vmin = MIN(v[nxInc][nyInc], vmin);
+
+            nyInc += 1;
+            if (ny == nyInc) {
+                nxInc += 1;
+                nyInc = 0;
             }
         }
-
-        //printf("\n"); TODO
         nbLines += 1;
     }
+
+    printf("nombre de lignes -> %d (%d x %d + 1)\n", nbLines, nx, ny);
+    if ((nx * ny) + 1 != nbLines) {
+        printf("\tFichier inconsistent /!\\\n");
+    }
+    printf("xmax: %e\t| ymax: %e\t| umax: %e\t| vmax: %e\n", xmax, ymax, umax, vmax);
+    printf("xmin: %e\t| ymin: %e\t| umin: %e\t| vmin: %e\n", xmin, ymin, umin, vmin);
 
     fclose(fobject);
 } /* charger_objet */
