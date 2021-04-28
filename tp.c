@@ -114,36 +114,41 @@ void    charger_objet(char *nom) {
     fclose(fobject);
 } /* charger_objet */
 
-void afficher_profil(float couleur[3])
-{
+void afficher_profil(float couleur[3]) {
 } /* afficher_profil */
 
 
-void afficher_maillage(float couleur[3])
-{
+void afficher_maillage(float couleur[3]) {
 } /* afficher_maillage */
 
-void afficher_vitesses(float couleur[3])
-{
+void afficher_vitesses(float couleur[3]) {
 } /* afficher_vitesses */
 
-void afficher_candidates(float couleur[3],int nc, int ci[], int cj[])
-{
+void afficher_candidates(float couleur[3],int nc, int ci[], int cj[]) {
 } /* afficher_candidates */
 
-void afficher_pointage(float couleur[3],double xp, double yp, int ic, int jc)
-{
+void afficher_pointage(float couleur[3],double xp, double yp, int ic, int jc) {
+    glColor3f(couleur[0], couleur[1], couleur[2]);
+    glPointSize(3);
+    glBegin(GL_POINTS);
+    glVertex3f(xp,yp,0.0f);
+    glEnd();
 } /* afficher_pointage */
 
-void afficher_ligne(float couleur[3], double x[], double y[], int n)
-{
+void afficher_ligne(float couleur[3], double x[], double y[], int n) {
+    glColor3f(couleur[0], couleur[1], couleur[2]);
+
+    for(unsigned int index = 0; 0<n-1; index++) {
+        glBegin(GL_LINES);
+        glVertex2f(x[index], x[index + 1]);
+        glVertex2f(y[index], y[index + 1]);
+        glEnd();
+    }
 } /* afficher_ligne */
 
-void cellules_candidates(int *nc, int ci[], int cj[])
-{
+void cellules_candidates(int *nc, int ci[], int cj[]) {
 } /* cellules_candidates */
 
 void calculer_ligne(double step, double pe, double qe, int ci, int cj,
-                    double sx[], double sy[], int *nns, int maxp)
-{
+                    double sx[], double sy[], int *nns, int maxp) {
 } /* calculer_ligne */
