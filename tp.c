@@ -118,8 +118,8 @@ void    charger_objet(char *nom) {
 } /* charger_objet */
 
 void afficher_profil(float couleur[3]) {
-	glColor3f(couleur[0], couleur[1], couleur[2]);
-    
+    glColor3f(couleur[0], couleur[1], couleur[2]);
+
     glBegin(GL_POLYGON);
     for(int i = 0; i < nx; i++) {
         glVertex2f(x[i][0], y[i][0]);
@@ -130,42 +130,45 @@ void afficher_profil(float couleur[3]) {
 
 void afficher_maillage(float couleur[3]) {
 
-	glColor3f(couleur[0], couleur[1], couleur[2]);
+    glColor3f(couleur[0], couleur[1], couleur[2]);
 
-	glBegin(GL_LINES);
-	for(int i = 0; i < nx-1; i++) {
-		for(int j = 0; j < ny-1; j++ ) {
-			
-			glVertex2f(x[i][j], y[i][j]);
-			glVertex2f(x[i+1][j], y[i+1][j]);	
-			
-			glVertex2f(x[i][j], y[i][j]);	
-			glVertex2f(x[i][j+1], y[i][j+1]);
-			
+    glBegin(GL_LINES);
+    for(int i = 0; i < nx; i++) {
+        for(int j = 0; j < ny; j++ ) {
 
-		}
-	}
-	glEnd();	
-} 
+            if (i < nx-1) {
+                glVertex2f(x[i][j], y[i][j]);
+                glVertex2f(x[i+1][j], y[i+1][j]);
+            }
+
+            if (j < ny-1) {
+                glVertex2f(x[i][j], y[i][j]);
+                glVertex2f(x[i][j+1], y[i][j+1]);
+            }
+
+        }
+    }
+    glEnd();
+}
 
 void afficher_vitesses(float couleur[3]) {
-	
+
 } /* afficher_vitesses */
 
 void afficher_candidates(float couleur[3],int nc, int ci[], int cj[]) {
-	glColor3f(couleur[0], couleur[1], couleur[2]);
+    glColor3f(couleur[0], couleur[1], couleur[2]);
 
-	glBegin(GL_POLYGON);
-	for(int index = 0; index < nc; index++){
-		int candidate_x = ci[index]; //voir.c
-		int candidate_y = cj[index]; //voir.c
-		
-		glVertex2f(x[candidate_x][candidate_y], y[candidate_x][candidate_y]);
-		glVertex2f(x[candidate_x+1][candidate_y], y[candidate_x+1][candidate_y]);
-		glVertex2f(x[candidate_x+1][candidate_y+1], y[candidate_x+1][candidate_y+1]);
-		glVertex2f(x[candidate_x][candidate_y+1], y[candidate_x][candidate_y+1]);
-	}
-	glEnd();
+    glBegin(GL_POLYGON);
+    for(int index = 0; index < nc; index++){
+        int candidate_x = ci[index]; //voir.c
+        int candidate_y = cj[index]; //voir.c
+
+        glVertex2f(x[candidate_x][candidate_y], y[candidate_x][candidate_y]);
+        glVertex2f(x[candidate_x+1][candidate_y], y[candidate_x+1][candidate_y]);
+        glVertex2f(x[candidate_x+1][candidate_y+1], y[candidate_x+1][candidate_y+1]);
+        glVertex2f(x[candidate_x][candidate_y+1], y[candidate_x][candidate_y+1]);
+    }
+    glEnd();
 } /* afficher_candidates */
 
 void afficher_pointage(float couleur[3],double xp, double yp, int ic, int jc) {
@@ -179,39 +182,39 @@ void afficher_pointage(float couleur[3],double xp, double yp, int ic, int jc) {
 void afficher_ligne(float couleur[3], double x[], double y[], int n) {
     glColor3f(couleur[0], couleur[1], couleur[2]);
 
-	glBegin(GL_LINES);
+    glBegin(GL_LINES);
     for(int index = 0; index < n-1; index++) {
-        
+
         glVertex2f(x[index], x[index+1]);
         glVertex2f(y[index], y[index+1]);
-        
+
     }
-	glEnd();
-	
+    glEnd();
+
 } /* afficher_ligne */
 
 void cellules_candidates(int *nc, int ci[], int cj[]) {
-	int a = 0;
-	for(int i = 0; i < nx-1; i++) {
+    int a = 0;
+    for(int i = 0; i < nx-1; i++) {
 
-		for(int j = 0; j < ny-1; j++) {
+        for(int j = 0; j < ny-1; j++) {
 
-			if(u[i][j]<=0 && u[i+1][j]<=0 && u[i+1][j+1]<=0 && u[i][j+1]<=0){
-				continue;
-			} else if(u[i][j]>0 && u[i+1][j]>0 && u[i+1][j+1]>0 && u[i][j+1]>0){
-				continue;
-			} else if(v[i][j]<=0 && v[i+1][j]<=0 && v[i+1][j+1]<=0 && v[i][j+1]<=0){
-				continue;
-			} else if(v[i][j]>0 && v[i+1][j]>0 && v[i+1][j+1]>0 && v[i][j+1]>0){
-				continue;
-			} else {
-				ci[a] = i;
-				cj[a] = j;
-				a += 1;
-			}
-		}
-	}
-	*nc = a;
+            if(u[i][j]<=0 && u[i+1][j]<=0 && u[i+1][j+1]<=0 && u[i][j+1]<=0){
+                continue;
+            } else if(u[i][j]>0 && u[i+1][j]>0 && u[i+1][j+1]>0 && u[i][j+1]>0){
+                continue;
+            } else if(v[i][j]<=0 && v[i+1][j]<=0 && v[i+1][j+1]<=0 && v[i][j+1]<=0){
+                continue;
+            } else if(v[i][j]>0 && v[i+1][j]>0 && v[i+1][j+1]>0 && v[i][j+1]>0){
+                continue;
+            } else {
+                ci[a] = i;
+                cj[a] = j;
+                a += 1;
+            }
+        }
+    }
+    *nc = a;
 
 } /* cellules_candidates */
 

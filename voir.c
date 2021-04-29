@@ -245,7 +245,7 @@ int main(int argc,char *argv[]) {
    initialiser_graphique("VUE-2D");
    glutDisplayFunc(afficher_objet); 
    glutReshapeFunc(v2d_reshape);
- 
+
    glutKeyboardFunc(clavier);
    glutMouseFunc(pointage);
    glutMainLoop();
