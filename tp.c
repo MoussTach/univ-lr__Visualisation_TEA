@@ -23,6 +23,8 @@
 /*                                                                     */
 /***********************************************************************/
 
+//sudo apt install libglu1-mesa-dev freeglut3-dev
+//gcc -g -o tp *.c -lglut -lGL -lGLU -lm
 
 #include <stdio.h>
 
